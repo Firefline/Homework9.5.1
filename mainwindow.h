@@ -34,17 +34,5 @@ private:
     int m = 0;
 
     QTimer *tmr;
-
-private slots:
-    void SendStartSignal();
-    void ReceiveStartSignal();
-
-    void SendCleanSignal();
-    void ReceiveCleanSignal();
-
-    void SendCircleSignal();
-    void ReceiveCircleSignal();
-
-    void updateTime();
 };
 #endif // MAINWINDOW_H
