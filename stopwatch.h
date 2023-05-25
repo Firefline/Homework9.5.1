@@ -20,11 +20,25 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Stopwatch *stopwatch;
 
-signals:
-    void sig_SendStartSignal();
-    void sig_SendCleanSignal();
-    void sig_SendCircleSignal();
+    bool startCount = true;
+    int circleCount = 1;
+    int ms_circle = 0;
+    int s_circle = 0;
+    int m_circle = 0;
+
+    int ms = 0;
+    int s = 0;
+    int m = 0;
+
+    QTimer *tmr;
+
+public slots:
+    void ReceiveStartSignal();
+    void ReceiveCleanSignal();
+    void ReceiveCircleSignal();
+    void setTimer();
 };
 
 #endif // STOPWATCH_H

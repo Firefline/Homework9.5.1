@@ -22,17 +22,6 @@ public:
 private:
     Ui::MainWindow *ui;
     Stopwatch *stopwatch;
-
-    bool startCount = true;
-    int circleCount = 1;
-    int ms_circle = 0;
-    int s_circle = 0;
-    int m_circle = 0;
-
-    int ms = 0;
-    int s = 0;
-    int m = 0;
-
     QTimer *tmr;
 };
 #endif // MAINWINDOW_H
