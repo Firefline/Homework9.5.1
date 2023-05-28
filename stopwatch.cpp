@@ -1,9 +1,10 @@
 #include "stopwatch.h"
-#include "ui_mainwindow.h"
 
 Stopwatch::Stopwatch(QObject *parent) : QObject{parent}
 {
-
+    tmr = new QTimer(this);
+    tmr->setInterval(100);
+    connect(tmr, &QTimer::timeout, this, &Stopwatch::setTimer);
 }
 
 Stopwatch::~Stopwatch()
@@ -15,64 +16,73 @@ void Stopwatch::ReceiveStartSignal()
 {
     if (startCount == true)
     {
-        tmr->start();
-        ui->startButton->setText("Стоп");
-        ui->circleButton->setEnabled(true);
+        emit Stopwatch::sig_SendStartSignal(startCount);
         startCount = false;
+
     } else if (startCount == false)
     {
-        tmr->stop();
-        ui->startButton->setText("Старт");
-        ui->circleButton->setEnabled(false);
+        emit Stopwatch::sig_SendStartSignal(startCount);
         startCount = true;
     }
 }
 
-void Stopwatch::ReceiveCircleSignal()
-{
-    ui->circleText->append("Круг " + QString::number(circleCount) + ", Время " + QString::number(m_circle) + " : " + QString::number(s_circle) + " : " + QString::number(ms_circle));
-    ++circleCount;
-    m_circle = 0;
-    s_circle = 0;
-    ms_circle = 0;
-}
-
 void Stopwatch::ReceiveCleanSignal()
 {
-    ui->secText->setText("0 : 0 : 0");
     circleCount = 1;
-    ms = 0;
-    s = 0;
-    m = 0;
-    ms_circle = 0;
-    s_circle = 0;
-    m_circle = 0;
+    msec = 0;
+    sec = 0;
+    min = 0;
+    msec_circle = 0;
+    sec_circle = 0;
+    min_circle = 0;
+    emit Stopwatch::sig_SendCleanSignal();
+}
+
+void Stopwatch::ReceiveCircleSignal()
+{
+    emit Stopwatch::sig_SendCircleSignal("Круг " + QString::number(circleCount) + ", Время " + QString::number(min_circle) + " : " + QString::number(sec_circle) + " : " + QString::number(msec_circle));
+    msec_circle = 0;
+    sec_circle = 0;
+    min_circle = 0;
+    ++circleCount;
 }
 
 void Stopwatch::setTimer()
 {
-    ++ms;
-    if (ms >= 10)
+    if (startCount == false)
     {
-        ms = 0;
-        ++s;
-    }
-    if (s >= 60)
-    {
-        s = 0;
-        ++m;
-    }
-    ui->secText->setText(QString::number(m) + " : " + QString::number(s) + " : " + QString::number(ms));
+        tmr->start();
 
-    ++ms_circle;
-    if (ms_circle >= 10)
+    } else if (startCount == true)
     {
-        ms_circle = 0;
-        ++s_circle;
+        tmr->stop();
     }
-    if (s_circle >= 60)
+
+    ++msec;
+    ++msec_circle;
+
+    if (msec >= 10)
     {
-        s_circle = 0;
-        ++m_circle;
+        msec = 0;
+        ++sec;
     }
+
+    if (sec >= 60)
+    {
+        sec = 0;
+        ++min;
+    }
+    if (msec_circle >= 10)
+    {
+        msec_circle = 0;
+        ++sec_circle;
+    }
+
+    if (sec_circle >= 60)
+    {
+        sec_circle = 0;
+        ++min_circle;
+    }
+
+    emit Stopwatch::sig_SendTimerSignal(QString::number(min) + " : " + QString::number(sec) + " : " + QString::number(msec));
 }

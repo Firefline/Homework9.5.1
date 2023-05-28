@@ -6,10 +6,6 @@
 #include <QTimer>
 #include <QTime>
 
-namespace Ui {
-class MainWindow;
-}
-
 class Stopwatch : public QObject
 {
     Q_OBJECT
@@ -19,26 +15,32 @@ public:
     ~Stopwatch();
 
 private:
-    Ui::MainWindow *ui;
     Stopwatch *stopwatch;
+    QTimer *tmr;
 
     bool startCount = true;
     int circleCount = 1;
-    int ms_circle = 0;
-    int s_circle = 0;
-    int m_circle = 0;
 
-    int ms = 0;
-    int s = 0;
-    int m = 0;
+    int msec = 0;
+    int sec = 0;
+    int min = 0;
 
-    QTimer *tmr;
+    int msec_circle = 0;
+    int sec_circle = 0;
+    int min_circle = 0;
 
 public slots:
     void ReceiveStartSignal();
     void ReceiveCleanSignal();
     void ReceiveCircleSignal();
     void setTimer();
+
+signals:
+    void sig_SendStartSignal(bool);
+    void sig_SendCleanSignal();
+    void sig_SendCircleSignal(QString);
+    void sig_SendTimerSignal(QString);
+
 };
 
 #endif // STOPWATCH_H

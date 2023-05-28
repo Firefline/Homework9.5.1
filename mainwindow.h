@@ -22,6 +22,11 @@ public:
 private:
     Ui::MainWindow *ui;
     Stopwatch *stopwatch;
-    QTimer *tmr;
+
+private slots:
+    void ReceiveStartSignalFromStopwatch(bool);
+    void ReceiveCleanSignalFromStopwatch();
+    void ReceiveCircleSignalFromStopwatch(QString);
+    void ReceiveTimerSignalFromStopwatch(QString);
 };
 #endif // MAINWINDOW_H
